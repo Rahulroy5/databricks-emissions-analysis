@@ -59,6 +59,8 @@ CAST(REPLACE(`GHG emissions mtons CO2e`, ',', '') AS DOUBLE)
 ## Files
 
 ```
+data/Emissions_Data_2023.csv      -- raw input dataset (~3k US counties, 2023)
+
 queries/                          -- SQL powering each dashboard dataset
 ├── 01_location_data.sql          -- geo-map source
 ├── 02_emissions_per_person.sql   -- per-capita ranking
@@ -69,11 +71,15 @@ screenshots/                      -- chart exports from the dashboard
 dashboard/emissions_dashboard.pdf -- full dashboard PDF export
 ```
 
+## Dataset
+
+`data/Emissions_Data_2023.csv` — one row per US county with state/county identifiers, coordinates, population, and energy/emissions metrics. The column of interest, `GHG emissions mtons CO2e`, is stored as a **comma-formatted string** (e.g. `"156,670"`), which is what the `REPLACE(...) + CAST AS DOUBLE` pattern in the queries handles.
+
 ---
 
 ## How to reproduce
 
 1. Spin up a Databricks workspace (Free Edition works).
-2. Load the `emissions_data` table into a catalog (`emissions.default.emissions_data` in this project).
+2. Upload `data/Emissions_Data_2023.csv` and create a Delta table at `emissions.default.emissions_data`.
 3. Start a SQL Warehouse, open each file in `queries/` in the SQL Editor, and run.
 4. Build a Dashboard, add each query as a dataset, and attach the visualization type shown in `screenshots/`.
